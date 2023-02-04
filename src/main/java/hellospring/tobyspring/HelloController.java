@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.Objects;
 
 @RequestMapping ("/hello") //class level로 들어온 mapping으로 요청을 먼저 구분
-@Component
+@MyComponent
 public class HelloController {
     private final HelloService helloService;
 
