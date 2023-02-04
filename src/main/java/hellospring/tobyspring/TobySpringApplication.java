@@ -6,12 +6,14 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.boot.web.server.WebServer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -24,15 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Configuration
+@ComponentScan //component annotation이 붙은 class를 bean으로 등록해달라는 annotation
 public class TobySpringApplication {
-    @Bean
-    public HelloController helloController(HelloService helloService) { //factory method 생성
-        return new HelloController(helloService);
-    }
-    @Bean
-    public HelloService helloService() { //인터페이스 타입으로 리턴해야함
-        return new SimpleHelloService();
-    }
 
     public static void main(String[] args) {
         //springcontainer 생성
