@@ -23,12 +23,14 @@ import java.io.IOException;
 public class TobySpringApplication {
 
     public static void main(String[] args) {
+        //springcontainer 생성
         GenericWebApplicationContext applicationContext = new GenericWebApplicationContext();
         applicationContext.registerBean(HelloController.class); //bean 등록(bean class)
         applicationContext.registerBean(SimpleHelloService.class); //bean 등록(bean class)
         //simpleHelloService bean을 구현한 것이 있는지 찾아보고 구현한 helloController 생성자로 넣어주는데 어떤 걸 먼저 등록해줘도 됨(순서는 상관없음)
         applicationContext.refresh(); //container 초기화(bean object 생성)
 
+        //servletContainer를 코드로 실행하면서 servlet을 등록
         TomcatServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
         WebServer webServer = serverFactory.getWebServer(servletContext -> {
             servletContext.addServlet("dispatcher",
