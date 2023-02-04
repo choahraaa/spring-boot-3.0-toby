@@ -28,6 +28,15 @@ import java.io.IOException;
 @Configuration
 @ComponentScan //component annotation이 붙은 class를 bean으로 등록해달라는 annotation
 public class TobySpringApplication {
+    @Bean
+    public TomcatServletWebServerFactory tomcatServletWebServerFactory() {
+        return new TomcatServletWebServerFactory();
+    }
+
+    @Bean
+    public DispatcherServlet dispatcherServlet() {
+        return new DispatcherServlet();
+    }
 
     public static void main(String[] args) {
         //springcontainer 생성
@@ -38,12 +47,12 @@ public class TobySpringApplication {
                 super.onRefresh();
 
                 //servletContainer를 코드로 실행하면서 servlet을 등록
-                TomcatServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
+                TomcatServletWebServerFactory serverFactory = this.getBean(TomcatServletWebServerFactory.class);
+                DispatcherServlet dispatcherServlet = this.getBean(DispatcherServlet.class);
+                dispatcherServlet.setApplicationContext(this);
+
                 WebServer webServer = serverFactory.getWebServer(servletContext -> {
-                    servletContext.addServlet("dispatcher",
-                            new DispatcherServlet(this) //applicationContext 내에서 실행하는 것으로 자기 자신을 호출하면
-                            //dispatcherServlet은 wedapplicationcontext type을 사용해야함
-                    ).addMapping("/*");
+                    servletContext.addServlet("dispatcher", dispatcherServlet).addMapping("/*");
                 });
                 webServer.start(); //tomcat servlet container start
             }
