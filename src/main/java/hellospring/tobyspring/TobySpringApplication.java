@@ -5,6 +5,7 @@ import org.apache.catalina.startup.Tomcat;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -20,23 +21,26 @@ import java.io.IOException;
 public class TobySpringApplication {
 
     public static void main(String[] args) {
+        GenericApplicationContext applicationContext = new GenericApplicationContext();
+        applicationContext.registerBean(HelloController.class); //bean 등록(bean class)
+        applicationContext.refresh(); //container 초기화(bean object 생성)
+
         TomcatServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
         WebServer webServer = serverFactory.getWebServer(servletContext -> {
-            HelloController helloController = new HelloController();
-
             servletContext.addServlet("frontController", new HttpServlet() {
                 @Override
                 protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
                     //요청
-                    //인증, 보안, 다국어 처리, 공통기능
+                    //인증, 보안, 다국어 처리, 공통기능(frontController안에 들어가는 기능)
                     if(req.getRequestURI().equals("/hello") && req.getMethod().equals(HttpMethod.GET.name())) {
                         //url의 시작이 hello임과 동시에 요청 메소드가 get일 때를 처리함
                         String name = req.getParameter("name");
 
+                        HelloController helloController = applicationContext.getBean(HelloController.class);// bean object 가져옴
                         String ret= helloController.hello(name); //응답(메소드 호출 결과값을 return)
 
                         //응답
-                        resp.setContentType(MediaType.TEXT_PLAIN_VALUE); 
+                        resp.setContentType(MediaType.TEXT_PLAIN_VALUE);
                         resp.getWriter().println(ret); //응답 콘텐츠(내용)
                     } else {
                         resp.setStatus(HttpStatus.NOT_FOUND.value());
