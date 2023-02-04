@@ -1,14 +1,18 @@
 package hellospring.tobyspring;
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Objects;
 
-@RequestMapping ("/hello") //class level로 들어온 mapping으로 요청을 먼저 구분
-@MyComponent
+//@Controller //@Component를 metaAnnotation으로 가지고 있어 componentScan이 bean으로 등록시켜줌
+@RestController
+//restController : api의 기능을 가진 controller method에서는 리턴하는 값을 바디에 넣어서 처리하기 때문에 @ResponseBody가 필요
+//class level에 requestMapping생략 가능(dispatcherServlet이 알아서 찾아줌, method level에 url을 넣어주면 됌)
 public class HelloController {
     private final HelloService helloService;
 
@@ -16,8 +20,7 @@ public class HelloController {
         this.helloService = helloService;
     }
 
-    @GetMapping  //dispatcherServlet에서 mapping 하는 설정을 간략화
-    @ResponseBody //응답을 text-plain으로 전달하기 위해 사용한 어노테이션
+    @GetMapping("/hello")
     public String hello(String name){
         return helloService.sayHello(Objects.requireNonNull(name)); //Objects.requireNonNull는 파라미터의 값이 null 인지 체크함
     }

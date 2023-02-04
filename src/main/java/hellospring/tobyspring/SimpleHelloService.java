@@ -1,8 +1,9 @@
 package hellospring.tobyspring;
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@MyComponent //메타어노테이션으로 안에 @Component를 적용될 수 있음
+@Service //@Component를 metaAnnotation으로 가지고 있어 componentScan이 bean으로 등록시켜줌
 public class SimpleHelloService implements HelloService {
     public String sayHello(String name) {
         return "Hello" + name;
