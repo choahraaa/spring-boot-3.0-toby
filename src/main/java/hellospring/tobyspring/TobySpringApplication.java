@@ -22,6 +22,8 @@ public class TobySpringApplication {
     public static void main(String[] args) {
         TomcatServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
         WebServer webServer = serverFactory.getWebServer(servletContext -> {
+            HelloController helloController = new HelloController();
+
             servletContext.addServlet("frontController", new HttpServlet() {
                 @Override
                 protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -31,12 +33,14 @@ public class TobySpringApplication {
                         //url의 시작이 hello임과 동시에 요청 메소드가 get일 때를 처리함
                         String name = req.getParameter("name");
 
+                        String ret= helloController.hello(name); //응답(메소드 호출 결과값을 return)
+
                         //응답
                         //resp.setStatus(200);
                         resp.setStatus(HttpStatus.OK.value()); //상태
                         //resp.setHeader("content-Type", "text/plain");
                         resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE); //응답 헤더
-                        resp.getWriter().println("Hello!" + name); //응답 콘텐츠(내용)
+                        resp.getWriter().println(ret); //응답 콘텐츠(내용)
                     } else if (req.getRequestURI().equals("/user")) {
                         //
                     } else {
