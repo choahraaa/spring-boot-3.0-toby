@@ -36,13 +36,8 @@ public class TobySpringApplication {
                         String ret= helloController.hello(name); //응답(메소드 호출 결과값을 return)
 
                         //응답
-                        //resp.setStatus(200);
-                        resp.setStatus(HttpStatus.OK.value()); //상태
-                        //resp.setHeader("content-Type", "text/plain");
-                        resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE); //응답 헤더
+                        resp.setContentType(MediaType.TEXT_PLAIN_VALUE); 
                         resp.getWriter().println(ret); //응답 콘텐츠(내용)
-                    } else if (req.getRequestURI().equals("/user")) {
-                        //
                     } else {
                         resp.setStatus(HttpStatus.NOT_FOUND.value());
                     }
